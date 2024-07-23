@@ -1,5 +1,8 @@
 const redis = require('redis');
-const client = redis.createClient();
+const client = redis.createClient({
+  host: 'your-redis-endpoint',
+  port: 6379,
+});
 
 client.on('error', (err) => {
   console.error('Redis error:', err);
@@ -7,8 +10,9 @@ client.on('error', (err) => {
 
 const connectToCache = () => {
   client.on('connect', () => {
-    console.log('Connected to Redis');
+    console.log('Connected to AWS Elasticache Redis');
   });
 };
 
 module.exports = { connectToCache, client };
+

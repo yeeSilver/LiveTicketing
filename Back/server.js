@@ -1,26 +1,24 @@
 const express = require('express');
-const mongoose = require('mongoose');
+const { connectDB } = require('./config/db');
+const { connectToCache } = require('./config/cache');
 const seatRoutes = require('./routes/seatRoutes');
-const userRoutes = require('./routes/userRoutes');
-const { connectToCache } = require('./utils/cache');
+const paymentRoutes = require('./routes/paymentRoutes');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-app.use(express.json());
+// Connect to PostgreSQL
+connectDB();
 
-// Connect to MongoDB
-mongoose.connect('mongodb://localhost/ticketing', {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-});
-
-// Connect to Elastic Cache
+// Connect to Elastic Cache (Redis)
 connectToCache();
 
+app.use(express.json());
 app.use('/api/seats', seatRoutes);
-app.use('/api/users', userRoutes);
+app.use('/api/payments', paymentRoutes);
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
+
+
